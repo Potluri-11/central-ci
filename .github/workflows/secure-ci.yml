@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 jobs:
-  demo-job:
+  ci-job:
     runs-on: ubuntu-latest
 
     steps:
@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build
-        run: echo "Build done"
+        run: echo "Build passed"
 
       - name: Test
         run: echo "Tests passed"
@@ -21,7 +21,7 @@ jobs:
         run: echo "SBOM generated"
 
       - name: Trivy
-        run: echo "Trivy scan done"
+        run: echo "Trivy scan passed"
 
       - name: Cosign
         run: echo "Image signed"

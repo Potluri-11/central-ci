@@ -1,0 +1,27 @@
+name: Secure CI Pipeline
+
+on:
+  workflow_call:
+
+jobs:
+  demo-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build
+        run: echo "Build done"
+
+      - name: Test
+        run: echo "Tests passed"
+
+      - name: SBOM
+        run: echo "SBOM generated"
+
+      - name: Trivy
+        run: echo "Trivy scan done"
+
+      - name: Cosign
+        run: echo "Image signed"

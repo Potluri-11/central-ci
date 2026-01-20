@@ -16,7 +16,9 @@ jobs:
         run: echo "Build passed"
 
       - name: Test
-        run: echo "Tests passed"
+        run: |
+          echo "Tests passed"
+          exit 0
 
       - name: SBOM
         run: echo "SBOM generated"

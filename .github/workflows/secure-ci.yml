@@ -1,4 +1,4 @@
-name: Secure CI Pipeline
+name: Central Reusable CI Pipeline
 
 on:
   workflow_call:
@@ -12,9 +12,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Show service name
-        run: echo "Running CI for service: ${{ inputs.service_name }}"
-
       - name: Build
         run: echo "Build passed"
 

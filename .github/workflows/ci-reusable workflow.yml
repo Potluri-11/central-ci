@@ -1,0 +1,85 @@
+name: Reusable CI – Quality, Security & Signing
+
+on:
+  workflow_call:
+    inputs:
+      service-name:
+        required: true
+        type: string
+      unit-test-command:
+        required: true
+        type: string
+      integration-test-command:
+        required: true
+        type: string
+      coverage-command:
+        required: true
+        type: string
+      image-ref:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write   # REQUIRED for Cosign keyless signing
+
+jobs:
+  #pipeline:
+  checkout:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Unit tests
+        #description: For quality gates
+        run: ${{ inputs.unit-test-command }}
+        working-directory: ${{ inputs.service-name }}
+
+      - name: Integration tests
+        run: ${{ inputs.integration-test-command }}
+        working-directory: ${{ inputs.service-name }}
+
+      - name: Coverage gate
+        run: ${{ inputs.coverage-command }}
+        working-directory: ${{ inputs.service-name }}
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          path: ${{ inputs.service-name }}
+          format: cyclonedx-json
+          output-file: sbom.json
+
+      - name: Trivy
+        uses: aquasecurity/trivy-action@v0.20.0
+        with:
+          scan-type: sbom
+          input: sbom.json
+          severity: CRITICAL,HIGH
+          exit-code: 1
+
+      # DOCKER BUILD 
+      - name: Login to container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ inputs.service-name }}
+          push: true
+          tags: ${{ inputs.image-ref }}
+
+      # COSIGN
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Sign container image
+        run: cosign sign ${{ inputs.image-ref }}
+        env:
+          COSIGN_EXPERIMENTAL: "true"

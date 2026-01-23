@@ -95,3 +95,4 @@ jobs:
         run: cosign sign ${{ inputs.image-ref }} #We sign the container image after it’s pushed to the registry, and the signature is stored with the image so it can be verified at deployment time
         env:
           COSIGN_EXPERIMENTAL: "true" # Enables the Cosign as keyless signing using OIDC-based authentication instead of stored passwords or keys
+          COSIGN_YES: "true"

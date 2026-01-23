@@ -50,7 +50,7 @@ jobs:
         #uses: aquasecurity/trivy-action@master
         with:
           path: .
-          format: cyclonedx-json
+          format: spdx-json
           output-file: sbom.json
 
       - name: Trivy

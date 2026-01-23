@@ -6,13 +6,13 @@ on:
       service-name:
         required: true
         type: string
-      unit-test-command:
+      unit-test:
         required: true
         type: string
-      integration-test-command:
+      integration-test:
         required: true
         type: string
-      coverage-command:
+      code-coverage:
         required: true
         type: string
       image-ref:
@@ -20,30 +20,30 @@ on:
         type: string
 
 permissions:
-  contents: read
-  packages: write
-  id-token: write   # REQUIRED for Cosign keyless signing
+  contents: read    #workflow can read the repository contents (code, files). when the checkout@v4 is implemented, it can able to read the code in the repo
+  packages: write   # we are pushing the docker image right, so when we use this rule, it will give permission for pushing it into a github regisrty
+  id-token: write   # singin withou any having secrets (OIDC method). where it can be signed in as keyless for COSIGN
 
 jobs:
   #pipeline:
   checkout:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout source
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Unit tests
+      - name: Unit test
         #description: For quality gates
-        run: ${{ inputs.unit-test-command }}
-        working-directory: ${{ inputs.service-name }}
+        run: ${{ inputs.unit-test }}
+       # working-directory: ${{ inputs.service-name }}
 
       - name: Integration tests
-        run: ${{ inputs.integration-test-command }}
-        working-directory: ${{ inputs.service-name }}
+        run: ${{ inputs.integration-test }}
+        #working-directory: ${{ inputs.service-name }}
 
       - name: Coverage gate
-        run: ${{ inputs.coverage-command }}
-        working-directory: ${{ inputs.service-name }}
+        run: ${{ inputs.code-coverage }}
+        #working-directory: ${{ inputs.service-name }}
 
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
@@ -68,7 +68,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push image
+      - name: Build and push #(image)
         uses: docker/build-push-action@v5
         with:
           context: ${{ inputs.service-name }}
@@ -77,9 +77,8 @@ jobs:
 
       # COSIGN
       - name: Install Cosign
-        uses: sigstore/cosign-installer@v3
-
+        uses: sigstore/cosign-installer@v3 #We use sigstore/cosign-installer@v3 because it is the current stable major version recommended by Sigstore, providing security updates without breaking changes
       - name: Sign container image
-        run: cosign sign ${{ inputs.image-ref }}
+        run: cosign sign ${{ inputs.image-ref }} #We sign the container image after it’s pushed to the registry, and the signature is stored with the image so it can be verified at deployment time
         env:
-          COSIGN_EXPERIMENTAL: "true"
+          COSIGN_EXPERIMENTAL: "true" # Enables the Cosign as keyless signing using OIDC-based authentication instead of stored passwords or keys

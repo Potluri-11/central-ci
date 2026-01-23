@@ -45,7 +45,7 @@ jobs:
         run: ${{ inputs.code-coverage }}
         #working-directory: ${{ inputs.service-name }}
 
-      - name: Trivy SBOM + Vulnerability Scan
+      - name: Vulnerability Scan
         uses: aquasecurity/trivy-action@master
         with:
          scan-type: fs
@@ -55,22 +55,6 @@ jobs:
          scanners: vuln
          severity: CRITICAL,HIGH
          exit-code: 1
-
-
-      # - name: Generate SBOM
-      #   uses: anchore/sbom-action@v0
-      #   with:
-      #     path: .
-      #     format: spdx-json
-      #     output-file: sbom.json
-      
-      # - name: Trivy
-      #   uses: aquasecurity/trivy-action@master
-      #   with:
-      #     scan-type: sbom
-      #     input: sbom.json
-      #     severity: CRITICAL,HIGH
-      #     exit-code: 1
 
       # DOCKER BUILD 
       - name: Login to container registry

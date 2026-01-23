@@ -46,8 +46,8 @@ jobs:
         #working-directory: ${{ inputs.service-name }}
 
       - name: Generate SBOM
-        #uses: anchore/sbom-action@v0
-        uses: aquasecurity/trivy-action@master
+        uses: anchore/sbom-action@v0
+        #uses: aquasecurity/trivy-action@master
         with:
           path: .
           format: cyclonedx-json

@@ -54,22 +54,9 @@ jobs:
         with:
           scan-type: fs
           scan-ref: .
-          #scanners: vuln
           severity: CRITICAL,HIGH
           exit-code: 1
-
-      # - name: SBOM
-      #   uses: aquasecurity/trivy-action@master
-      #   with:
-      #    scan-type: fs
-      #    scan-ref: .
-      #    scanners: vuln,sbom
-      #    format: spdx-json
-      #    output: sbom.json
-      #    #scanners: vuln
-      #    severity: CRITICAL,HIGH
-      #    exit-code: 1
-
+      
       # DOCKER BUILD 
       - name: Login to container registry
         uses: docker/login-action@v3

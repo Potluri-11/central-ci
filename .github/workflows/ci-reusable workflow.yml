@@ -53,7 +53,7 @@ jobs:
           output-file: sbom.json
 
       - name: Trivy
-        uses: aquasecurity/trivy-action@latest
+        uses: aquasecurity/trivy-action@v0.24.0
         with:
           scan-type: sbom
           input: sbom.json

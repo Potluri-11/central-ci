@@ -68,7 +68,7 @@ jobs:
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3 
       - name: Sign container image
-        run: cosign sign ${{ inputs.image-ref }} #We sign the container image after it’s pushed to the registry, and the signature is stored with the image so it can be verified at deployment time
+        run: cosign sign ${{ inputs.image-ref }}
         env:
-          COSIGN_EXPERIMENTAL: "true" # Enables the Cosign as keyless signing using OIDC-based authentication instead of stored passwords or keys
+          COSIGN_EXPERIMENTAL: "true" 
           COSIGN_YES: "true"

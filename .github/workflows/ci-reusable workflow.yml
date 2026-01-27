@@ -66,7 +66,7 @@ jobs:
           tags: ${{ inputs.image-ref }}
 # COSIGN
       - name: Install Cosign
-        uses: sigstore/cosign-installer@v3 #We use sigstore/cosign-installer@v3 because it is the current stable major version recommended by Sigstore, providing security updates without breaking changes
+        uses: sigstore/cosign-installer@v3 
       - name: Sign container image
         run: cosign sign ${{ inputs.image-ref }} #We sign the container image after it’s pushed to the registry, and the signature is stored with the image so it can be verified at deployment time
         env:

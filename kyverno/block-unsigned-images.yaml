@@ -1,12 +1,12 @@
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
-  name: require-signed-images
+  name: signed-images
 spec:
   validationFailureAction: Enforce
   background: false
   rules:
-    - name: verify-cosign-signature
+    - name: cosign-signature
       match:
         resources:
           kinds:

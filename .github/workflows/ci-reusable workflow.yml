@@ -20,9 +20,9 @@ on:
         type: string
 
 permissions:
-  contents: read    #workflow can read the repository contents (code, files). when the checkout@v4 is implemented, it can able to read the code in the repo
-  packages: write   # we are pushing the docker image right, so when we use this rule, it will give permission for pushing it into a github regisrty
-  id-token: write   # singin withou any having secrets (OIDC method). where it can be signed in as keyless for COSIGN
+  contents: read    
+  packages: write   
+  id-token: write   
 
 jobs:
   #pipeline:
@@ -31,16 +31,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Unit test
         run: ${{ inputs.unit-test }}
-
       - name: Integration tests
         run: ${{ inputs.integration-test }}
-
-      - name: Coverage gate
+      - name: Coverage report
         run: ${{ inputs.code-coverage }}
-
       - name: SBOM
         uses: aquasecurity/trivy-action@master
         with:
@@ -48,31 +44,27 @@ jobs:
           scan-ref: .
           format: spdx-json
           output: sbom.json
-
       - name: Trivy
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: fs
           scan-ref: .
           severity: CRITICAL,HIGH
-          exit-code: 1
-      
-      # DOCKER BUILD 
+          exit-code: 1 
+# DOCKER BUILD 
       - name: Login to container registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Build and push 
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           tags: ${{ inputs.image-ref }}
-
-      # COSIGN
+# COSIGN
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3 #We use sigstore/cosign-installer@v3 because it is the current stable major version recommended by Sigstore, providing security updates without breaking changes
       - name: Sign container image

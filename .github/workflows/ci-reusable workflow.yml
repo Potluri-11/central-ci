@@ -37,12 +37,16 @@ jobs:
         run: ${{ inputs.integration-test }}
       - name: coverage report
         run: ${{ inputs.code-coverage }}
-      - name: Coverage report
+      - name: Test report
         uses:  actions/upload-artifact@v4
         with:
           name:  Reports
           path:  build/reports/jacoco/test
-         
+       - name: Pages
+         run: |
+           mkdir -p public
+           cp -r build/reports/jacoco/test/html/* public/
+  
       - name: SBOM
         uses: aquasecurity/trivy-action@master
         with:

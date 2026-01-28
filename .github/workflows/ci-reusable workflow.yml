@@ -42,11 +42,16 @@ jobs:
         with:
           name:  Reports
           path:  build/reports/jacoco/test
-       - name: Pages
-         run: |
-           mkdir -p public
-           cp -r build/reports/jacoco/test/html/* public/
-  
+      - name: Pages
+        run: |
+          mkdir -p public
+          cp -r build/reports/jacoco/test/html/* public/
+      - name: Deploying reports to Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: public
+
       - name: SBOM
         uses: aquasecurity/trivy-action@master
         with:

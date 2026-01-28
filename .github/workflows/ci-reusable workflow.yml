@@ -35,8 +35,14 @@ jobs:
         run: ${{ inputs.unit-test }}
       - name: Integration tests
         run: ${{ inputs.integration-test }}
-      - name: Coverage report
+      - name: Generate coverage report
         run: ${{ inputs.code-coverage }}
+      - name: Coverage report
+        uses:  actions/upload-artifact@v4
+        with:
+          name:  Reports
+          path:  build/reports/jacoco/test
+         
       - name: SBOM
         uses: aquasecurity/trivy-action@master
         with:

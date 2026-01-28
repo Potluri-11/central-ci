@@ -35,7 +35,7 @@ jobs:
         run: ${{ inputs.unit-test }}
       - name: Integration tests
         run: ${{ inputs.integration-test }}
-      - name: Generate coverage report
+      - name: coverage report
         run: ${{ inputs.code-coverage }}
       - name: Coverage report
         uses:  actions/upload-artifact@v4

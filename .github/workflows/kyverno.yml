@@ -14,6 +14,12 @@ jobs:
           repository: Potluri-11/central-ci
           ref: main
           path: central-ci
+      - name: Debug workspace (IMPORTANT)
+        run: |
+          echo "PWD:"
+          pwd
+          echo "Files:"
+          ls -R
       - name: Configure kubeconfig
         run: |
           mkdir -p ~/.kube

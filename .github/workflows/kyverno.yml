@@ -8,10 +8,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: Potluri-11/central-ci
+          ref: main
+          path: central-ci
       - name: Configure kubeconfig
         run: |
           mkdir -p ~/.kube
           echo "${{ secrets.KUBECONFIG }}" | base64 -d > ~/.kube/config
       - name: Apply Kyverno policies
-        run: kubectl apply -f policies/
+        run: kubectl apply -f central-ci/policies/

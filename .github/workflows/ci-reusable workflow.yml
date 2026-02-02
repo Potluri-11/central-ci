@@ -96,13 +96,21 @@ jobs:
           --certificate-oidc-issuer https://token.actions.githubusercontent.com \
           ${{ inputs.image-ref }}
 
-#  KYVERNO
+# #  KYVERNO
+#       - name: Install Kyverno CLI
+#         run: |
+#           curl -LO https://github.com/kyverno/kyverno/releases/latest/download/kyverno-cli_linux_x86_64
+#           chmod +x kyverno-cli_linux_x86_64
+#           sudo mv kyverno-cli_linux_x86_64 /usr/local/bin/kyverno
+#       -  name:
+#          run: |
+#            kyverno apply policies/ manifests/ --cluster
       - name: Install Kyverno CLI
         run: |
           curl -LO https://github.com/kyverno/kyverno/releases/latest/download/kyverno-cli_linux_x86_64
           chmod +x kyverno-cli_linux_x86_64
           sudo mv kyverno-cli_linux_x86_64 /usr/local/bin/kyverno
+          kyverno version
       -  name:
-         run: |
-           kyverno apply policies/ manifests/ --cluster
-       
+        run: |
+          kyverno apply policies/ manifests/ --cluster

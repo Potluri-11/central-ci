@@ -1,12 +1,10 @@
 name: CD – Kyverno Policies
 
 on:
-  push:
-    paths:
-      - "kyverno/**"
-
+  workflow_call: 
+ 
 jobs:
-  apply-policies:
+  apply-kyverno-policy:
     runs-on: ubuntu-latest
 
     steps:

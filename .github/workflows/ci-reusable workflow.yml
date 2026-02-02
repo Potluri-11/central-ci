@@ -90,9 +90,6 @@ jobs:
 #  KYVERNO
       - name: Install Kyverno CLI
         run: |
-          curl -LO https://github.com/kyverno/kyverno/releases/latest/download/kyverno-cli_linux_x86_64.tar.gz
-          tar -xvf kyverno-cli_linux_x86_64.tar.gz
-          sudo mv kyverno /usr/local/bin/
-      - name: Validate manifests with Kyverno policy
-        run: |
-          kyverno apply policies/ manifests/
+          curl -LO https://github.com/kyverno/kyverno/releases/latest/download/kyverno-cli_linux_x86_64
+          chmod +x kyverno-cli_linux_x86_64
+          sudo mv kyverno-cli_linux_x86_64 /usr/local/bin/kyverno

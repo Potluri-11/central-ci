@@ -17,4 +17,4 @@ spec:
       - entries:
         - keyless:
             issuer: "https://token.actions.githubusercontent.com"
-            subject: "*"
+            subject:  "https://github.com/Potluri-11/*"

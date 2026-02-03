@@ -161,5 +161,4 @@ jobs:
           kyverno version
       - name: Verifying signed image
         run: |
-          kyverno apply policies/ --resource manifests/signed-image.yaml
-
+          kyverno apply $GITHUB_WORKSPACE/policies/ -r $GITHUB_WORKSPACE/manifests/signed-image.yaml

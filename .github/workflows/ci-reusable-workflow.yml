@@ -87,13 +87,6 @@ jobs:
         env:
           COSIGN_EXPERIMENTAL: "true" 
           COSIGN_YES: "true"
-#DOCKER
-      - name: Login to GHCR
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
 
 #  KYVERNO
       - name: Install Kyverno CLI
@@ -101,15 +94,10 @@ jobs:
           curl -L https://github.com/kyverno/kyverno/releases/download/v1.12.4/kyverno-cli_v1.12.4_linux_x86_64.tar.gz -o kyverno.tar.gz
           tar -xzf kyverno.tar.gz
           sudo mv kyverno /usr/local/bin/kyverno
-          kyverno version
-      # - name: Verifying signed image
-      #   run: |
-      #     kyverno apply $GITHUB_WORKSPACE/policies/ -r $GITHUB_WORKSPACE/manifests/signed-image.yaml
+         # kyverno version
       - name: Verify signed image
         run: |
-          # kyverno apply $GITHUB_WORKSPACE/policies/ \
-          # -r $GITHUB_WORKSPACE/manifests/signed-image.yaml 
-          cosign verify \
-          --certificate-identity-regexp "https://github.com/Potluri-11/.*" \
-          --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-          ghcr.io/potluri-11/accounts:1.0.0
+         cosign verify \
+         --certificate-identity-regexp "https://github.com/Potluri-11/.*" \
+         --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+         ghcr.io/potluri-11/accounts:1.0.0

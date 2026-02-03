@@ -1,58 +1,6 @@
-# name: Reusable CI – Quality, Security & Signing
-
-# on:
-#   workflow_call:
-#     inputs:
-#       service-name:
-#         required: true
-#         type: string
-#       unit-test:
-#         required: true
-#         type: string
-#       integration-test:
-#         required: true
-#         type: string
-#       code-coverage:
-#         required: true
-#         type: string
-#       image-ref:
-#         required: true
-#         type: string
-
-# permissions:
-#   contents: write    
-#   packages: write   
-#   id-token: write   
-
-# jobs:
-#   #pipeline:
-#   checkout:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v4
 #       - name:  Gradle
 #         uses:  gradle/gradle-build-action@v2
-#       - name: Unit test
-#         run: ${{ inputs.unit-test }}
-#       - name: Integration tests
-#         run: ${{ inputs.integration-test }}
-#       - name: coverage report
-#         run: ${{ inputs.code-coverage }}
-#       - name: Test report
-#         uses:  actions/upload-artifact@v4
-#         with:
-#           name:  Reports
-#           path:  build/reports/jacoco/test
-#       - name: Pages
-#         run: |
-#           mkdir -p public
-#           cp -r build/reports/jacoco/test/html/* public/
-#       - name: Deploying reports to Pages
-#         uses: peaceiris/actions-gh-pages@v4
-#         with:
-#           github_token: ${{ secrets.GITHUB_TOKEN }}
-#           publish_dir: public
+
 
 #       - name: SBOM
 #         uses: aquasecurity/trivy-action@master
@@ -207,8 +155,7 @@ jobs:
 #  KYVERNO
       - name: Install Kyverno CLI
         run: |
-          curl -LO https://github.com/kyverno/kyverno/releases/latest/download/kyverno-cli_linux_x86_64.tar.gz
-          tar -xvf kyverno-cli_linux_x86_64.tar.gz
+          curl -s https://raw.githubusercontent.com/kyverno/kyverno/main/scripts/install-kyverno.sh | bash
           sudo mv kyverno /usr/local/bin/
       - name: Validate manifests with Kyverno policy
         run: |

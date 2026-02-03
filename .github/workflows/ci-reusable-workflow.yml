@@ -155,8 +155,10 @@ jobs:
 #  KYVERNO
       - name: Install Kyverno CLI
         run: |
-          curl -s https://raw.githubusercontent.com/kyverno/kyverno/main/scripts/install-kyverno.sh | bash
-          sudo mv kyverno /usr/local/bin/
+          curl -LO https://github.com/kyverno/kyverno/releases/latest/download/kyverno-cli_linux_x86_64
+          chmod +x kyverno-cli_linux_x86_64
+          sudo mv kyverno-cli_linux_x86_64 /usr/local/bin/kyverno
+          kyverno version
       - name: Validate manifests with Kyverno policy
         run: |
           kyverno apply policies/ manifests/ \

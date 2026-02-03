@@ -87,6 +87,14 @@ jobs:
         env:
           COSIGN_EXPERIMENTAL: "true" 
           COSIGN_YES: "true"
+#DOCKER
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
 #  KYVERNO
       - name: Install Kyverno CLI
         run: |
@@ -100,5 +108,4 @@ jobs:
       - name: Verify signed image
         run: |
           kyverno apply $GITHUB_WORKSPACE/policies/ \
-          -r $GITHUB_WORKSPACE/manifests/signed-image.yaml \
-          --registry-credentials ghcr.io=${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}
+          -r $GITHUB_WORKSPACE/manifests/signed-image.yaml 

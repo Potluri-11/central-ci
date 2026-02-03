@@ -87,6 +87,14 @@ jobs:
         env:
           COSIGN_EXPERIMENTAL: "true" 
           COSIGN_YES: "true"
+#SSH
+      - name: SSH to EC2
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} \
+          "echo Connected to GitHub Actions"
 
 #  KYVERNO
       - name: Install Kyverno CLI

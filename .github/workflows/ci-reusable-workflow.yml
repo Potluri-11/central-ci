@@ -1,68 +1,3 @@
-#       - name:  Gradle
-#         uses:  gradle/gradle-build-action@v2
-
-
-#       - name: SBOM
-#         uses: aquasecurity/trivy-action@master
-#         with:
-#           scan-type: fs
-#           scan-ref: .
-#           format: spdx-json
-#           output: sbom.json
-#       - name: Trivy
-#         uses: aquasecurity/trivy-action@master
-#         with:
-#           scan-type: fs
-#           scan-ref: .
-#           severity: CRITICAL,HIGH
-#           exit-code: 1 
-# # DOCKER BUILD 
-#       - name: Login to container registry
-#         uses: docker/login-action@v3
-#         with:
-#           registry: ghcr.io
-#           username: ${{ github.actor }}
-#           password: ${{ secrets.GITHUB_TOKEN }}
-#       - name: Build and push 
-#         uses: docker/build-push-action@v5
-#         with:
-#           context: .
-#           push: true
-#           tags: ${{ inputs.image-ref }}
-# # COSIGN
-#       - name: Install Cosign
-#         uses: sigstore/cosign-installer@v3 
-#       - name: Sign container image
-#         run: cosign sign ${{ inputs.image-ref }}
-#         env:
-#           COSIGN_EXPERIMENTAL: "true" 
-#           COSIGN_YES: "true"
-#       # - name: Verify container image signature
-#       #   run: |
-#       #     cosign verify \
-#       #     --certificate-identity-regexp "https://github.com/Potluri-11/.*" \
-#       #     --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-#       #     ${{ inputs.image-ref }}
-
-# # #  KYVERNO
-# #       - name: Install Kyverno CLI
-# #         run: |
-# #           curl -LO https://github.com/kyverno/kyverno/releases/latest/download/kyverno-cli_linux_x86_64
-# #           chmod +x kyverno-cli_linux_x86_64
-# #           sudo mv kyverno-cli_linux_x86_64 /usr/local/bin/kyverno
-# #       -  name:
-# #          run: |
-# #            kyverno apply policies/ manifests/ --cluster
-#       - name: Install Kyverno CLI
-#         run: |
-#           curl -LO https://github.com/kyverno/kyverno/releases/latest/download/kyverno-cli_linux_x86_64
-#           chmod +x kyverno-cli_linux_x86_64
-#           sudo mv kyverno-cli_linux_x86_64 /usr/local/bin/kyverno
-#           kyverno version
-#       -  name:
-#         run: |
-#           kyverno apply policies/ manifests/ --cluster
-
 name: Reusable CI – Quality, Security & Signing
 
 on:
@@ -159,6 +94,11 @@ jobs:
           tar -xzf kyverno.tar.gz
           sudo mv kyverno /usr/local/bin/kyverno
           kyverno version
-      - name: Verifying signed image
+      # - name: Verifying signed image
+      #   run: |
+      #     kyverno apply $GITHUB_WORKSPACE/policies/ -r $GITHUB_WORKSPACE/manifests/signed-image.yaml
+      - name: Verify signed image
         run: |
-          kyverno apply $GITHUB_WORKSPACE/policies/ -r $GITHUB_WORKSPACE/manifests/signed-image.yaml
+          kyverno apply $GITHUB_WORKSPACE/policies/ \
+          -r $GITHUB_WORKSPACE/manifests/signed-image.yaml \
+          --registry-credentials ghcr.io=${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}

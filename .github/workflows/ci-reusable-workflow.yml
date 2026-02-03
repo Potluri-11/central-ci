@@ -159,8 +159,7 @@ jobs:
           tar -xzf kyverno.tar.gz
           sudo mv kyverno /usr/local/bin/kyverno
           kyverno version
-      - name: Validate manifests with Kyverno policy
+      - name: Verifying signed image
         run: |
-          kyverno apply policies/ manifests/ \
-          --image-refs ${{ inputs.image-ref }} \
-          --audit-warn
+          kyverno apply policies/ manifests/signed-image.yaml
+

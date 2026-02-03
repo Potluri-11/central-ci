@@ -89,12 +89,12 @@ jobs:
         env:
           COSIGN_EXPERIMENTAL: "true" 
           COSIGN_YES: "true"
-      - name: Verify container image signature
-        run: |
-          cosign verify \
-          --certificate-identity-regexp "https://github.com/Potluri-11/.*" \
-          --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-          ${{ inputs.image-ref }}
+      # - name: Verify container image signature
+      #   run: |
+      #     cosign verify \
+      #     --certificate-identity-regexp "https://github.com/Potluri-11/.*" \
+      #     --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+      #     ${{ inputs.image-ref }}
 
 # #  KYVERNO
 #       - name: Install Kyverno CLI

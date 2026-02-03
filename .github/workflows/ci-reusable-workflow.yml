@@ -161,5 +161,5 @@ jobs:
           kyverno version
       - name: Verifying signed image
         run: |
-          kyverno apply policies/ manifests/signed-image.yaml
+          kyverno apply policies/ --resource manifests/signed-image.yaml
 

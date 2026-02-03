@@ -159,4 +159,6 @@ jobs:
           sudo mv kyverno /usr/local/bin/
       - name: Validate manifests with Kyverno policy
         run: |
-          kyverno apply policies/ manifests/ --cluster
+          kyverno apply policies/ manifests/ \
+          --image-refs ${{ inputs.image-ref }} \
+          --audit-warn

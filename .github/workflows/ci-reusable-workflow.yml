@@ -107,5 +107,9 @@ jobs:
       #     kyverno apply $GITHUB_WORKSPACE/policies/ -r $GITHUB_WORKSPACE/manifests/signed-image.yaml
       - name: Verify signed image
         run: |
-          kyverno apply $GITHUB_WORKSPACE/policies/ \
-          -r $GITHUB_WORKSPACE/manifests/signed-image.yaml 
+          # kyverno apply $GITHUB_WORKSPACE/policies/ \
+          # -r $GITHUB_WORKSPACE/manifests/signed-image.yaml 
+          cosign verify \
+          --certificate-identity-regexp "https://github.com/Potluri-11/.*" \
+          --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+          ghcr.io/potluri-11/accounts:1.0.0
